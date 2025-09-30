@@ -1,3 +1,4 @@
+data "azurerm_client_config" "current" {}
 data "azurerm_key_vault" "example" {
   name                = var.keyvault_name
   resource_group_name = var.resource_group_name
