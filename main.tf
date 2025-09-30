@@ -4,20 +4,20 @@ data "azurerm_key_vault" "example" {
   resource_group_name = var.resource_group_name
 }
 
-resource "azurerm_key_vault_access_policy" "test" {
-  key_vault_id = data.azurerm_key_vault.example.id
-  tenant_id    = data.azurerm_key_vault.example.tenant_id
-  object_id    = data.azurerm_client_config.current.object_id
+# resource "azurerm_key_vault_access_policy" "test" {
+#   key_vault_id = data.azurerm_key_vault.example.id
+#   tenant_id    = data.azurerm_key_vault.example.tenant_id
+#   object_id    = data.azurerm_client_config.current.object_id
 
-  key_permissions = [
-    "Create",
-    "Get",
-    "Delete",
-    "Purge",
-    "List",
-    "GetRotationPolicy",
-  ]
-}
+#   key_permissions = [
+#     "Create",
+#     "Get",
+#     "Delete",
+#     "Purge",
+#     "List",
+#     "GetRotationPolicy",
+#   ]
+# }
 
 resource "azurerm_ai_foundry" "ai_foundry" {
   name                = var.name
@@ -26,7 +26,7 @@ resource "azurerm_ai_foundry" "ai_foundry" {
   key_vault_id        = data.azurerm_key_vault.example.id
   storage_account_id  = azurerm_storage_account.example.id
 
-  depends_on = [azurerm_storage_account.example, azurerm_key_vault_access_policy.test]
+  depends_on = [azurerm_storage_account.example]
   identity {
     type = "SystemAssigned"
   }
@@ -37,7 +37,7 @@ resource "azurerm_ai_foundry_project" "example" {
   location           = var.location
   ai_services_hub_id = azurerm_ai_foundry.ai_foundry.id
 
-  depends_on = [azurerm_storage_account.example, azurerm_key_vault_access_policy.test, azurerm_ai_foundry.ai_foundry]
+  depends_on = [azurerm_storage_account.example, azurerm_ai_foundry.ai_foundry]
 
   identity {
     type = "SystemAssigned"
